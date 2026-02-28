@@ -1,0 +1,3326 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Notilify API",
+    "version": "1.0.0",
+    "description": "Generated from registered Express routes. Flesh out request/response schemas for production-grade reference docs."
+  },
+  "servers": [
+    {
+      "url": "https://api.notilify.com"
+    }
+  ],
+  "paths": {
+    "/v1/api-key": {
+      "get": {
+        "tags": [
+          "api-key"
+        ],
+        "summary": "List API keys",
+        "description": "Fetch API keys for the authenticated account. If none exists, a default key is created automatically.",
+        "operationId": "getV1ApiKey",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "API keys fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "api-key"
+        ],
+        "summary": "Create API key",
+        "operationId": "postV1ApiKey",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "keyName": {
+                    "type": "string",
+                    "example": "Production key"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "API key created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/api-key/{id}": {
+      "patch": {
+        "tags": [
+          "api-key"
+        ],
+        "summary": "Rename API key",
+        "operationId": "patchV1ApiKeyById",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "keyName": {
+                    "type": "string",
+                    "example": "Production key"
+                  }
+                },
+                "required": [
+                  "keyName"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "API key updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/api-key/{id}/usage": {
+      "get": {
+        "tags": [
+          "api-key"
+        ],
+        "summary": "Get API key usage detail",
+        "description": "Returns aggregate usage counters and per-endpoint usage events for one API key.",
+        "operationId": "getV1ApiKeyByIdUsage",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "API key usage fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "api key usage fetched"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "usage": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "example": "67bc9f012ad89f0012de4a9f"
+                            },
+                            "keyName": {
+                              "type": "string",
+                              "example": "Production key"
+                            },
+                            "totalRequests": {
+                              "type": "integer",
+                              "example": 123
+                            },
+                            "lastUsedAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "nullable": true
+                            },
+                            "events": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "timestamp": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                  },
+                                  "method": {
+                                    "type": "string",
+                                    "example": "POST"
+                                  },
+                                  "endpoint": {
+                                    "type": "string",
+                                    "example": "/v1/messages"
+                                  },
+                                  "status": {
+                                    "type": "integer",
+                                    "example": 202
+                                  },
+                                  "count": {
+                                    "type": "integer",
+                                    "example": 1
+                                  }
+                                },
+                                "required": [
+                                  "timestamp",
+                                  "method",
+                                  "endpoint",
+                                  "status",
+                                  "count"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "keyName",
+                            "totalRequests",
+                            "events"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "usage"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/sign-in": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Sign in",
+        "description": "Authenticate a user and return a JWT token.",
+        "operationId": "postV1AuthSignIn",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthLoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Incorrect credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/message": {
+      "get": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "List messages",
+        "description": "Fetch one message by `id` or a paginated message list.",
+        "operationId": "getV1MessageLegacy",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 100
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recipient",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "dateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Messages fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "message"
+        ],
+        "summary": "Send one SMS",
+        "operationId": "postV1MessageLegacy",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKeyHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageSendRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Message accepted/scheduled/sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageSendResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/message/bulk": {
+      "post": {
+        "tags": [
+          "message"
+        ],
+        "summary": "Send bulk SMS",
+        "operationId": "postV1MessageBulk",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKeyHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageBulkRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Bulk request accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageBulkResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/message/demo": {
+      "post": {
+        "tags": [
+          "message"
+        ],
+        "summary": "Send demo SMS (from Notilify)",
+        "description": "Sends a demo message using Notilify as the sender. The sender is fixed to `Notilify` on this endpoint.",
+        "operationId": "postV1MessageDemo",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "example": "+14155552671"
+                  },
+                  "message": {
+                    "type": "string",
+                    "maxLength": 157,
+                    "example": "Your Notilify demo message"
+                  }
+                },
+                "required": [
+                  "phoneNumber",
+                  "message"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Demo message accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/payment": {
+      "post": {
+        "tags": [
+          "payment"
+        ],
+        "summary": "Initiate balance top-up",
+        "operationId": "postV1Payment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "string",
+                    "example": "$25"
+                  }
+                },
+                "required": [
+                  "amount"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment initiated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/phone-number": {
+      "get": {
+        "tags": [
+          "phone-number"
+        ],
+        "summary": "List purchased phone numbers",
+        "operationId": "getV1PhoneNumber",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Phone numbers fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "phone-number"
+        ],
+        "summary": "Purchase phone number",
+        "operationId": "postV1PhoneNumber",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "example": "+14155550123"
+                  }
+                },
+                "required": [
+                  "phoneNumber"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Phone number purchase initiated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/phone-number/available": {
+      "get": {
+        "tags": [
+          "phone-number"
+        ],
+        "summary": "List available phone numbers",
+        "operationId": "getV1PhoneNumberAvailable",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Available numbers fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/phone-number/look-up": {
+      "get": {
+        "tags": [
+          "phone-number"
+        ],
+        "summary": "Validate phone number",
+        "operationId": "getV1PhoneNumberLookup",
+        "parameters": [
+          {
+            "name": "phoneNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "+14155552671"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lookup completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/pricing": {
+      "get": {
+        "tags": [
+          "pricing"
+        ],
+        "summary": "Get pricing",
+        "operationId": "getV1Pricing",
+        "responses": {
+          "200": {
+            "description": "Pricing fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PricingResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/pricing/country-rate": {
+      "get": {
+        "tags": [
+          "pricing"
+        ],
+        "summary": "Get pricing country rates",
+        "operationId": "getV1PricingCountryRate",
+        "responses": {
+          "200": {
+            "description": "Pricing fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PricingResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/pricing/rates": {
+      "get": {
+        "tags": [
+          "pricing"
+        ],
+        "summary": "Get pricing rates",
+        "operationId": "getV1PricingRates",
+        "responses": {
+          "200": {
+            "description": "Pricing fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PricingResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/sender-id": {
+      "get": {
+        "tags": [
+          "sender-id"
+        ],
+        "summary": "List sender IDs",
+        "operationId": "getV1SenderId",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sender IDs fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SenderIdListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "sender-id"
+        ],
+        "summary": "Create sender ID",
+        "operationId": "postV1SenderId",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SenderIdCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sender ID created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SenderIdCreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/sender-id/{id}": {
+      "get": {
+        "tags": [
+          "sender-id"
+        ],
+        "summary": "Get sender ID by id",
+        "operationId": "getV1SenderIdById",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sender ID fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SenderIdSingleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/webhook": {
+      "get": {
+        "tags": [
+          "webhook"
+        ],
+        "summary": "List webhooks",
+        "operationId": "getV1Webhook",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhooks fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryWebhookListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "webhook"
+        ],
+        "summary": "Create webhook",
+        "operationId": "postV1Webhook",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookConfigRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Webhook created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryWebhookListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/webhook/{id}": {
+      "delete": {
+        "tags": [
+          "webhook"
+        ],
+        "summary": "Delete webhook by id",
+        "operationId": "deleteV1WebhookById",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryWebhookDeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "webhook"
+        ],
+        "summary": "Update webhook by id",
+        "operationId": "patchV1WebhookById",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookConfigRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryWebhookListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/webhook/{id}/deliveries": {
+      "get": {
+        "tags": [
+          "webhook"
+        ],
+        "summary": "List webhook deliveries by id",
+        "operationId": "getV1WebhookByIdDeliveries",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook deliveries fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryWebhookDeliveriesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/webhook/{id}/test": {
+      "post": {
+        "tags": [
+          "webhook"
+        ],
+        "summary": "Test webhook by id",
+        "operationId": "postV1WebhookByIdTest",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook test queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryWebhookTestResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Use `Authorization: Bearer <token>`. The same header may also contain a Notilify API key value."
+      }
+    },
+    "parameters": {
+      "IdempotencyKeyHeader": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "description": "Optional idempotency key for safe retries on message send endpoints."
+      }
+    },
+    "schemas": {
+      "ApiError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ]
+      },
+      "AuthLoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "ops@notilify.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "S3cretPassw0rd!"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AuthSignUpRequest": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "example": "Tina"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Oluwabukola"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "founder@notilify.com"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "example": "StrongPass123!"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "email",
+          "password"
+        ]
+      },
+      "AuthForgotPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "founder@notilify.com"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "AuthResetPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "otp": {
+            "type": "string",
+            "example": "673921"
+          },
+          "password": {
+            "type": "string",
+            "example": "NewStrongPass123!"
+          }
+        },
+        "required": [
+          "otp",
+          "password"
+        ]
+      },
+      "AuthTokenResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Log In Successful"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+              }
+            },
+            "required": [
+              "token"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "AuthMessageResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "User Created"
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ]
+      },
+      "MessageSendRequest": {
+        "type": "object",
+        "description": "Canonical request shape for sending one SMS.",
+        "properties": {
+          "message": {
+            "type": "string",
+            "maxLength": 160,
+            "example": "Your OTP is 123456"
+          },
+          "to": {
+            "type": "string",
+            "example": "+14155552671"
+          },
+          "from": {
+            "type": "string",
+            "description": "Sender ID or purchased phone number.",
+            "example": "NOTILIFY"
+          }
+        },
+        "required": [
+          "message",
+          "to",
+          "from"
+        ]
+      },
+      "MessageSendAcceptedData": {
+        "type": "object",
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4a9f"
+          },
+          "queued_message_id": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4aa1"
+          }
+        },
+        "required": [
+          "message_id"
+        ]
+      },
+      "MessageSendScheduledData": {
+        "type": "object",
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4a9f"
+          },
+          "scheduled_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-03-01T12:00:00.000Z"
+          }
+        },
+        "required": [
+          "message_id",
+          "scheduled_at"
+        ]
+      },
+      "MessageSendImmediateData": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4a9f"
+          },
+          "message_id": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4a9f"
+          },
+          "fee": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "example": 0.042
+              },
+              "currency": {
+                "type": "string",
+                "example": "USD"
+              }
+            },
+            "required": [
+              "amount",
+              "currency"
+            ]
+          }
+        },
+        "required": [
+          "_id",
+          "message_id"
+        ]
+      },
+      "MessageSendResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Message Accepted"
+          },
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MessageSendAcceptedData"
+              },
+              {
+                "$ref": "#/components/schemas/MessageSendScheduledData"
+              },
+              {
+                "$ref": "#/components/schemas/MessageSendImmediateData"
+              }
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "MessageBulkItem": {
+        "type": "object",
+        "properties": {
+          "phoneNumber": {
+            "type": "string",
+            "example": "+14155552671"
+          },
+          "to": {
+            "type": "string",
+            "example": "+14155552671"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 1600,
+            "example": "Promo: 20% off this week."
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 1600,
+            "example": "Promo: 20% off this week."
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          }
+        },
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "required": [
+                  "phoneNumber"
+                ]
+              },
+              {
+                "required": [
+                  "to"
+                ]
+              }
+            ]
+          },
+          {
+            "anyOf": [
+              {
+                "required": [
+                  "message"
+                ]
+              },
+              {
+                "required": [
+                  "body"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "MessageBulkRequest": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string",
+            "example": "NOTILIFY"
+          },
+          "senderId": {
+            "type": "string",
+            "example": "NOTILIFY"
+          },
+          "from": {
+            "type": "string",
+            "example": "NOTILIFY"
+          },
+          "scheduledAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-03-01T12:00:00.000Z"
+          },
+          "scheduledAtLocal": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-03-01T07:00:00.000-05:00"
+          },
+          "timezone": {
+            "type": "string",
+            "example": "America/New_York"
+          },
+          "campaignName": {
+            "type": "string",
+            "example": "march-launch"
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "data": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/MessageBulkItem"
+            }
+          },
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/MessageBulkItem"
+            }
+          }
+        },
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "required": [
+                  "data"
+                ]
+              },
+              {
+                "required": [
+                  "messages"
+                ]
+              }
+            ]
+          },
+          {
+            "anyOf": [
+              {
+                "required": [
+                  "sender"
+                ]
+              },
+              {
+                "required": [
+                  "senderId"
+                ]
+              },
+              {
+                "required": [
+                  "from"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "MessageBulkResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Bulk Messages Sent Successfully"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "batch_id": {
+                "type": "string",
+                "example": "batch_m7yt1zhy_h7nzx0tv"
+              },
+              "message_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": [
+                  "67bc9f012ad89f0012de4a9f",
+                  "67bc9f012ad89f0012de4aa4"
+                ]
+              }
+            },
+            "required": [
+              "batch_id"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "MessageRecord": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4a9f"
+          },
+          "message_id": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4a9f"
+          },
+          "body": {
+            "type": "string",
+            "example": "Your OTP is 123456"
+          },
+          "from": {
+            "type": "string",
+            "example": "NOTILIFY"
+          },
+          "to": {
+            "type": "string",
+            "example": "+14155552671"
+          },
+          "status": {
+            "type": "string",
+            "example": "sent"
+          },
+          "amount": {
+            "type": "number",
+            "example": 0.042
+          },
+          "country": {
+            "type": "string",
+            "example": "US"
+          },
+          "providerAmount": {
+            "type": "number",
+            "example": 0.039
+          },
+          "providerCurrency": {
+            "type": "string",
+            "example": "USD"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "_id",
+          "message_id",
+          "body",
+          "to",
+          "status"
+        ]
+      },
+      "MessageListResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Messages Fetched"
+          },
+          "data": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "$ref": "#/components/schemas/MessageRecord"
+                  }
+                },
+                "required": [
+                  "message"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "currentPage": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "messages": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/MessageRecord"
+                    }
+                  },
+                  "totalItemsCount": {
+                    "type": "number",
+                    "example": 140
+                  },
+                  "totalPages": {
+                    "type": "number",
+                    "example": 2
+                  }
+                },
+                "required": [
+                  "currentPage",
+                  "messages",
+                  "totalItemsCount",
+                  "totalPages"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "WebhookConfigRequest": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://hooks.example.com/notilify"
+          },
+          "secret": {
+            "type": "string",
+            "example": "whsec_abc123"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "WebhookConfig": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4a9f"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "secret": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "WebhookConfigResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Webhooks Fetched"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "webhooks": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/WebhookConfig"
+                }
+              }
+            },
+            "required": [
+              "webhooks"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "WebhookStripeRequest": {
+        "type": "object",
+        "description": "Stripe webhook payload. Supports both charge-style and event-style payloads used by Notilify.",
+        "properties": {
+          "object": {
+            "type": "string",
+            "example": "charge"
+          },
+          "status": {
+            "type": "string",
+            "example": "succeeded"
+          },
+          "type": {
+            "type": "string",
+            "example": "checkout.session.completed"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "object": {
+                "type": "object",
+                "properties": {
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "example": {
+                      "reference": "pay_ref_123"
+                    }
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": true
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "example": {
+              "reference": "pay_ref_123"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "WebhookAckResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Payment Successful"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ]
+      },
+      "PricingRate": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "example": "United States"
+          },
+          "amount": {
+            "type": "number",
+            "example": 0.042
+          }
+        },
+        "required": [
+          "country",
+          "amount"
+        ]
+      },
+      "PricingResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Fetched Pricing"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "pricing": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PricingRate"
+                }
+              },
+              "rates": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PricingRate"
+                }
+              }
+            },
+            "required": [
+              "pricing",
+              "rates"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "UsageCountryBreakdownItem": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "example": "US"
+          },
+          "totalMessages": {
+            "type": "integer",
+            "example": 500
+          },
+          "totalCost": {
+            "type": "number",
+            "example": 21
+          },
+          "rate": {
+            "type": "number",
+            "example": 0.042
+          }
+        },
+        "required": [
+          "country",
+          "totalMessages",
+          "totalCost",
+          "rate"
+        ]
+      },
+      "UsageCountryBreakdownResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Usage Country Breakdown Fetched"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "to": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "breakdown": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UsageCountryBreakdownItem"
+                }
+              }
+            },
+            "required": [
+              "from",
+              "to",
+              "breakdown"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "UsageDailySpendItem": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-02-25"
+          },
+          "totalMessages": {
+            "type": "integer",
+            "example": 120
+          },
+          "totalCost": {
+            "type": "number",
+            "example": 5.04
+          },
+          "rate": {
+            "type": "number",
+            "example": 0.042
+          }
+        },
+        "required": [
+          "date",
+          "totalMessages",
+          "totalCost",
+          "rate"
+        ]
+      },
+      "UsageDailySpendResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Usage Daily Spend Fetched"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "to": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "dailySpend": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UsageDailySpendItem"
+                }
+              }
+            },
+            "required": [
+              "from",
+              "to",
+              "dailySpend"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "SenderIdStatusHistoryItem": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "Active",
+              "Inactive",
+              "Pending",
+              "Invalid"
+            ],
+            "example": "Pending"
+          },
+          "reason": {
+            "type": "string",
+            "example": "sender id created"
+          },
+          "changedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "status",
+          "reason",
+          "changedAt"
+        ]
+      },
+      "SenderIdRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4a9f"
+          },
+          "senderId": {
+            "type": "string",
+            "example": "NOTILIFY"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Active",
+              "Inactive",
+              "Pending",
+              "Invalid"
+            ],
+            "example": "Pending"
+          },
+          "country": {
+            "type": "string",
+            "example": "US"
+          },
+          "note": {
+            "type": "string",
+            "example": "Transactional traffic"
+          },
+          "statusHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SenderIdStatusHistoryItem"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "senderId",
+          "status",
+          "statusHistory",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "SenderIdCreateRequest": {
+        "type": "object",
+        "properties": {
+          "senderId": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 11,
+            "example": "NOTILIFY"
+          },
+          "country": {
+            "type": "string",
+            "nullable": true,
+            "example": "US"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255,
+            "example": "For OTP and alerts"
+          }
+        },
+        "required": [
+          "senderId"
+        ]
+      },
+      "SenderIdCreateResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Sender Id Created"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "67bc9f012ad89f0012de4a9f"
+              },
+              "senderId": {
+                "type": "string",
+                "example": "NOTILIFY"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "Active",
+                  "Inactive",
+                  "Pending",
+                  "Invalid"
+                ],
+                "example": "Pending"
+              },
+              "statusHistory": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SenderIdStatusHistoryItem"
+                }
+              }
+            },
+            "required": [
+              "id",
+              "senderId",
+              "status",
+              "statusHistory"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "SenderIdListResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Fetched Sender Ids"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "senderIds": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SenderIdRecord"
+                }
+              }
+            },
+            "required": [
+              "senderIds"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "SenderIdSingleResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Fetched Sender Id"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "senderId": {
+                "$ref": "#/components/schemas/SenderIdRecord"
+              }
+            },
+            "required": [
+              "senderId"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "SenderIdApproveRequest": {
+        "type": "object",
+        "properties": {
+          "senderId": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 11,
+            "example": "NOTILIFY"
+          }
+        },
+        "required": [
+          "senderId"
+        ]
+      },
+      "SenderIdApproveResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Sender Id Approved"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "senderId": {
+                "type": "string",
+                "example": "NOTILIFY"
+              }
+            },
+            "required": [
+              "senderId"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "DeliveryWebhookConfig": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "hasSecret": {
+            "type": "boolean",
+            "example": true
+          },
+          "secret": {
+            "type": "string",
+            "example": ""
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://hooks.example.com/notilify"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "enabled",
+          "hasSecret",
+          "secret",
+          "url"
+        ]
+      },
+      "DeliveryWebhookConfigResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Delivery Webhook Config Fetched"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "config": {
+                "$ref": "#/components/schemas/DeliveryWebhookConfig"
+              }
+            },
+            "required": [
+              "config"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "DeliveryWebhookListItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4a9f"
+          },
+          "enabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "event": {
+            "type": "string",
+            "example": "message.delivery.status"
+          },
+          "hasSecret": {
+            "type": "boolean",
+            "example": true
+          },
+          "method": {
+            "type": "string",
+            "example": "POST"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://hooks.example.com/notilify"
+          }
+        },
+        "required": [
+          "id",
+          "enabled",
+          "event",
+          "hasSecret",
+          "method",
+          "url"
+        ]
+      },
+      "DeliveryWebhookListResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Webhooks Fetched"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "webhooks": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DeliveryWebhookListItem"
+                }
+              }
+            },
+            "required": [
+              "webhooks"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "DeliveryWebhookSecretDetails": {
+        "type": "object",
+        "properties": {
+          "hasSecret": {
+            "type": "boolean",
+            "example": true
+          },
+          "secret": {
+            "type": "string",
+            "example": "whse****12de"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "hasSecret",
+          "secret"
+        ]
+      },
+      "DeliveryWebhookSecretResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Webhook Secret Fetched"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "secret": {
+                "$ref": "#/components/schemas/DeliveryWebhookSecretDetails"
+              }
+            },
+            "required": [
+              "secret"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "DeliveryWebhookEventPayload": {
+        "type": "object",
+        "properties": {
+          "event": {
+            "type": "string",
+            "example": "message.delivery.status"
+          },
+          "event_id": {
+            "type": "string",
+            "example": "evt_m7yt1zhy_h7nzx0tv"
+          },
+          "message_id": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4a9f"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "sent",
+              "delivered",
+              "retrying",
+              "failed"
+            ],
+            "example": "delivered"
+          },
+          "carrier_code": {
+            "type": "string",
+            "example": "0"
+          },
+          "normalized_carrier_code": {
+            "type": "string",
+            "example": "0"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_test": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "event",
+          "event_id",
+          "message_id",
+          "status",
+          "carrier_code",
+          "normalized_carrier_code",
+          "timestamp"
+        ]
+      },
+      "DeliveryWebhookEventRecord": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4a9f"
+          },
+          "source": {
+            "type": "string",
+            "example": "CustomerDeliveryWebhook"
+          },
+          "profile": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de49aa"
+          },
+          "message": {
+            "type": "string",
+            "example": "67bc9f012ad89f0012de4a9f"
+          },
+          "deliveryStatus": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "processing",
+              "delivered",
+              "failed",
+              "disabled"
+            ],
+            "example": "delivered"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "inbound",
+              "outbound"
+            ],
+            "example": "outbound"
+          },
+          "endpointUrl": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://hooks.example.com/notilify"
+          },
+          "eventType": {
+            "type": "string",
+            "example": "message.delivery.status"
+          },
+          "attemptCount": {
+            "type": "integer",
+            "example": 1
+          },
+          "maxAttempts": {
+            "type": "integer",
+            "example": 5
+          },
+          "lastAttemptAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "nextAttemptAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastError": {
+            "type": "string",
+            "example": ""
+          },
+          "lastResponseStatus": {
+            "type": "integer",
+            "example": 200
+          },
+          "deliveredAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "replayedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "signature": {
+            "type": "string",
+            "example": "a9e02f..."
+          },
+          "payload": {
+            "$ref": "#/components/schemas/DeliveryWebhookEventPayload"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "_id",
+          "source",
+          "deliveryStatus",
+          "payload",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "DeliveryWebhookEventsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Delivery Webhook Events Fetched"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "events": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DeliveryWebhookEventRecord"
+                }
+              }
+            },
+            "required": [
+              "events"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "DeliveryWebhookDeliveriesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Webhook Deliveries Fetched"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "deliveries": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DeliveryWebhookEventRecord"
+                }
+              }
+            },
+            "required": [
+              "deliveries"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "DeliveryWebhookReplayResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Delivery Webhook Event Replayed"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "eventId": {
+                "type": "string",
+                "example": "67bc9f012ad89f0012de4a9f"
+              },
+              "deliveryStatus": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "processing",
+                  "delivered",
+                  "failed",
+                  "disabled"
+                ],
+                "example": "pending"
+              }
+            },
+            "required": [
+              "eventId",
+              "deliveryStatus"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "DeliveryWebhookSummary": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "example": 410
+          },
+          "delivered": {
+            "type": "integer",
+            "example": 395
+          },
+          "pending": {
+            "type": "integer",
+            "example": 5
+          },
+          "processing": {
+            "type": "integer",
+            "example": 2
+          },
+          "failed": {
+            "type": "integer",
+            "example": 8
+          },
+          "disabled": {
+            "type": "integer",
+            "example": 0
+          },
+          "deliveryRate": {
+            "type": "number",
+            "example": 96.34
+          },
+          "failureRate": {
+            "type": "number",
+            "example": 1.95
+          }
+        },
+        "required": [
+          "total",
+          "delivered",
+          "pending",
+          "processing",
+          "failed",
+          "disabled",
+          "deliveryRate",
+          "failureRate"
+        ]
+      },
+      "DeliveryWebhookSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Delivery Webhook Summary Fetched"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "to": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "summary": {
+                "$ref": "#/components/schemas/DeliveryWebhookSummary"
+              }
+            },
+            "required": [
+              "from",
+              "to",
+              "summary"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "DeliveryWebhookDeleteResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Webhook Deleted"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "deleted": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "67bc9f012ad89f0012de4a9f"
+                  },
+                  "deleted": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                },
+                "required": [
+                  "id",
+                  "deleted"
+                ]
+              }
+            },
+            "required": [
+              "deleted"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "DeliveryWebhookTestResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Webhook Test Queued"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "eventId": {
+                "type": "string",
+                "example": "67bc9f012ad89f0012de4a9f"
+              }
+            },
+            "required": [
+              "eventId"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      }
+    }
+  }
+}
