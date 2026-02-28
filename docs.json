@@ -1,0 +1,25 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "Notilify API",
+  "theme": "mint",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#0D9373",
+    "dark": "#0A6B54"
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Docs",
+        "pages": ["introduction"]
+      },
+      {
+        "group": "API Reference",
+        "openapi": {
+          "source": "./openapi.json",
+          "directory": "api-reference"
+        }
+      }
+    ]
+  }
+}
