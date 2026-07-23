@@ -517,7 +517,7 @@
       },
       "post": {
         "tags": [
-          "message"
+          "messages"
         ],
         "summary": "Send one SMS",
         "operationId": "postV1MessageLegacy",
@@ -615,7 +615,7 @@
     "/v1/message/bulk": {
       "post": {
         "tags": [
-          "message"
+          "messages"
         ],
         "summary": "Send bulk SMS",
         "operationId": "postV1MessageBulk",
@@ -676,7 +676,7 @@
     "/v1/message/demo": {
       "post": {
         "tags": [
-          "message"
+          "messages"
         ],
         "summary": "Send demo SMS (from Notilify)",
         "description": "Sends a demo message using Notilify as the sender. The sender is fixed to `Notilify` on this endpoint.",
