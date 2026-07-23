@@ -3,7 +3,7 @@
   "info": {
     "title": "Notilify API",
     "version": "1.0.0",
-    "description": "Generated from registered Express routes. Flesh out request/response schemas for production-grade reference docs.",
+    "description": "Official Notilify API reference for authentication, messaging, webhooks, billing, and account operations.",
     "x-scalar-sdk-installation": [
       {
         "lang": "Node.js",
@@ -47,7 +47,7 @@
           "api-key"
         ],
         "summary": "List API keys",
-        "description": "Fetch API keys for the authenticated account. If none exists, a default key is created automatically.",
+        "description": "Fetch API keys for the authenticated account.",
         "operationId": "getV1ApiKey",
         "security": [
           {
@@ -747,6 +747,62 @@
       }
     },
     "/v1/payment": {
+      "get": {
+        "tags": [
+          "payment"
+        ],
+        "summary": "Get payment by reference",
+        "operationId": "getV1Payment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "reference",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NOTILIFY-AB12CD34EF"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "payment"
@@ -2054,6 +2110,29 @@
           "data"
         ]
       },
+      "SmsMessageStatus": {
+        "type": "string",
+        "description": "Granular Notilify SMS lifecycle status.",
+        "enum": [
+          "Accepted",
+          "Sent",
+          "Failed",
+          "Pending",
+          "Successful",
+          "Logged",
+          "Permanent Failure",
+          "Expired",
+          "Queued",
+          "Retrying",
+          "Soft Bounced",
+          "Hard Bounced",
+          "Rejected",
+          "Unsubscribed",
+          "Blocklisted",
+          "Reply"
+        ],
+        "example": "Successful"
+      },
       "MessageRecord": {
         "type": "object",
         "properties": {
@@ -2078,8 +2157,7 @@
             "example": "+14155552671"
           },
           "status": {
-            "type": "string",
-            "example": "sent"
+            "$ref": "#/components/schemas/SmsMessageStatus"
           },
           "amount": {
             "type": "number",
@@ -2979,6 +3057,7 @@
           },
           "status": {
             "type": "string",
+            "description": "Normalized delivery status bucket preserved for existing webhook consumers.",
             "enum": [
               "queued",
               "sent",
@@ -2987,6 +3066,9 @@
               "failed"
             ],
             "example": "delivered"
+          },
+          "message_status": {
+            "$ref": "#/components/schemas/SmsMessageStatus"
           },
           "carrier_code": {
             "type": "string",
@@ -3010,6 +3092,7 @@
           "event_id",
           "message_id",
           "status",
+          "message_status",
           "carrier_code",
           "normalized_carrier_code",
           "timestamp"
