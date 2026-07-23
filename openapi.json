@@ -3,7 +3,37 @@
   "info": {
     "title": "Notilify API",
     "version": "1.0.0",
-    "description": "Generated from registered Express routes. Flesh out request/response schemas for production-grade reference docs."
+    "description": "Generated from registered Express routes. Flesh out request/response schemas for production-grade reference docs.",
+    "x-scalar-sdk-installation": [
+      {
+        "lang": "Node.js",
+        "description": "Install the official Node.js SDK from npm:\n\n```bash\nnpm install notilify\n```"
+      },
+      {
+        "lang": "Python",
+        "description": "Install the official Python SDK from PyPI:\n\n```bash\npython -m pip install notilify\n```"
+      },
+      {
+        "lang": "PHP",
+        "description": "Install the official PHP SDK with Composer:\n\n```bash\ncomposer require notilify/notilify\n```"
+      },
+      {
+        "lang": "Go",
+        "description": "Install the official Go SDK:\n\n```bash\ngo get github.com/notilify/notilify-sdks/sdks/go@v0.1.1\n```"
+      },
+      {
+        "lang": "Ruby",
+        "description": "Install the official Ruby SDK from RubyGems:\n\n```bash\ngem install notilify\n```"
+      },
+      {
+        "lang": "Java",
+        "description": "Add the official Java SDK with Maven:\n\n```xml\n<dependency>\n  <groupId>com.notilify</groupId>\n  <artifactId>notilify</artifactId>\n  <version>0.1.0</version>\n</dependency>\n```"
+      },
+      {
+        "lang": "C#",
+        "description": "Install the official .NET SDK from NuGet:\n\n```bash\ndotnet add package Notilify --version 0.1.0\n```"
+      }
+    ]
   },
   "servers": [
     {
@@ -542,7 +572,44 @@
               }
             }
           }
-        }
+        },
+        "x-scalar-examples": [
+          {
+            "lang": "Node.js",
+            "label": "Node.js",
+            "source": "import Notilify from \"notilify\";\n\nconst client = new Notilify(process.env.NOTILIFY_API_KEY);\nconst response = await client.sendMessage({\n  from: \"NOTILIFY\",\n  to: \"+14155552671\",\n  message: \"Your verification code is 482913\",\n  idempotencyKey: \"first-send-001\",\n});\n\nconsole.log(response);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\nfrom notilify import Notilify\n\nclient = Notilify(os.environ[\"NOTILIFY_API_KEY\"])\nresponse = client.send_message(\n    sender=\"NOTILIFY\",\n    to=\"+14155552671\",\n    message=\"Your verification code is 482913\",\n    idempotency_key=\"first-send-001\",\n)\n\nprint(response)"
+          },
+          {
+            "lang": "PHP",
+            "label": "PHP",
+            "source": "<?php\nrequire __DIR__ . \"/vendor/autoload.php\";\n\nuse Notilify\\Client;\n\n$client = new Client(getenv(\"NOTILIFY_API_KEY\"));\n$response = $client->sendMessage(\n    from: \"NOTILIFY\",\n    to: \"+14155552671\",\n    message: \"Your verification code is 482913\",\n    idempotencyKey: \"first-send-001\",\n);\n\nprint_r($response);"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n  \"context\"\n  \"fmt\"\n  \"os\"\n\n  notilify \"github.com/notilify/notilify-sdks/sdks/go\"\n)\n\nfunc main() {\n  client, err := notilify.New(os.Getenv(\"NOTILIFY_API_KEY\"))\n  if err != nil { panic(err) }\n\n  response, err := client.SendMessage(context.Background(), notilify.SendMessageInput{\n    From: \"NOTILIFY\", To: \"+14155552671\",\n    Message: \"Your verification code is 482913\",\n    IdempotencyKey: \"first-send-001\",\n  })\n  if err != nil { panic(err) }\n  fmt.Println(response.StatusCode)\n}"
+          },
+          {
+            "lang": "Ruby",
+            "label": "Ruby",
+            "source": "require \"notilify\"\n\nclient = Notilify::Client.new(ENV.fetch(\"NOTILIFY_API_KEY\"))\nresponse = client.send_message(\n  from: \"NOTILIFY\",\n  to: \"+14155552671\",\n  message: \"Your verification code is 482913\",\n  idempotency_key: \"first-send-001\"\n)\n\nputs response"
+          },
+          {
+            "lang": "Java",
+            "label": "Java",
+            "source": "import com.notilify.NotilifyClient;\nimport com.notilify.NotilifyResponse;\nimport com.notilify.SendMessageRequest;\n\nNotilifyClient client = new NotilifyClient(System.getenv(\"NOTILIFY_API_KEY\"));\nNotilifyResponse response = client.sendMessage(new SendMessageRequest(\n  \"NOTILIFY\",\n  \"+14155552671\",\n  \"Your verification code is 482913\",\n  \"first-send-001\"\n));\n\nSystem.out.println(response.getStatusCode());"
+          },
+          {
+            "lang": "C#",
+            "label": "C#",
+            "source": "using Notilify;\n\nvar client = new NotilifyClient(\n    Environment.GetEnvironmentVariable(\"NOTILIFY_API_KEY\")!);\nvar response = await client.SendMessageAsync(new SendMessageRequest(\n    \"NOTILIFY\",\n    \"+14155552671\",\n    \"Your verification code is 482913\",\n    \"first-send-001\"\n));\n\nConsole.WriteLine(response);"
+          }
+        ]
       }
     },
     "/v1/message/bulk": {
