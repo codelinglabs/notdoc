@@ -3,7 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Notilify API Docs</title>
+    <title>Notilify API Documentation for Transactional SMS</title>
+    <meta
+      name="description"
+      content="Read the Notilify API documentation for transactional SMS, OTP delivery, account alerts, sender IDs, webhooks, and message status tracking."
+    />
+    <meta property="og:title" content="Notilify API Documentation for Transactional SMS" />
+    <meta
+      property="og:description"
+      content="Explore Notilify API docs for sending transactional SMS, managing OTP delivery, tracking webhooks, and debugging message status."
+    />
+    <meta property="og:url" content="https://docs.notilify.com/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Notilify API Documentation for Transactional SMS" />
+    <meta
+      name="twitter:description"
+      content="Explore Notilify API docs for transactional SMS, OTP delivery, sender IDs, webhooks, and delivery status tracking."
+    />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <style>
       html,
@@ -11,9 +28,36 @@
         height: 100%;
         margin: 0;
       }
+
+      .docs-crawl-summary {
+        height: 1px;
+        left: -10000px;
+        overflow: hidden;
+        position: absolute;
+        top: auto;
+        width: 1px;
+      }
+
+      #app {
+        min-height: 100%;
+      }
     </style>
   </head>
   <body>
+    <header class="docs-crawl-summary">
+      <h1>Notilify API documentation</h1>
+      <p>
+        Use the Notilify API reference to send transactional SMS, deliver OTP codes,
+        manage account alerts, plan sender IDs, receive delivery webhooks, and debug
+        message status events from your application.
+      </p>
+      <nav aria-label="Notilify documentation links">
+        <a href="https://notilify.com/docs">Documentation hub</a>
+        <a href="https://notilify.com/pricing">SMS pricing</a>
+        <a href="https://notilify.com/blog/transactional-sms-api">Transactional SMS API guide</a>
+        <a href="https://app.notilify.com/sign-up">Get an API key</a>
+      </nav>
+    </header>
     <div id="app"></div>
     <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
     <script>

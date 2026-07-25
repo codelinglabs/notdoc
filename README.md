@@ -79,6 +79,8 @@ cd ../notilify-be
 
 ```text
 index.html          Scalar documentation entry point
+robots.txt          Crawler access rules for docs.notilify.com
+sitemap.xml         Canonical docs URL submitted to crawlers
 openapi.json        API contract, schemas, examples, and SDK snippets
 introduction.mdx    Introduction content
 favicon.svg         Browser favicon
