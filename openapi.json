@@ -2269,6 +2269,26 @@
           "secret": {
             "type": "string",
             "example": "whsec_abc123"
+          },
+          "events": {
+            "type": "array",
+            "description": "Event groups delivered to this endpoint. Use message.received for inbound SMS replies.",
+            "items": {
+              "type": "string",
+              "enum": [
+                "all",
+                "message.queued",
+                "message.sent",
+                "message.delivered",
+                "message.failed",
+                "message.retrying",
+                "message.received"
+              ]
+            },
+            "example": [
+              "message.delivered",
+              "message.received"
+            ]
           }
         },
         "required": [
@@ -3186,7 +3206,14 @@
             "example": "a9e02f..."
           },
           "payload": {
-            "$ref": "#/components/schemas/DeliveryWebhookEventPayload"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DeliveryWebhookEventPayload"
+              },
+              {
+                "$ref": "#/components/schemas/InboundMessageWebhookEventPayload"
+              }
+            ]
           },
           "createdAt": {
             "type": "string",
@@ -3204,6 +3231,70 @@
           "payload",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "InboundMessageWebhookEventPayload": {
+        "type": "object",
+        "description": "An inbound SMS reply correlated with the original outbound message.",
+        "properties": {
+          "event": {
+            "type": "string",
+            "enum": [
+              "message.received"
+            ],
+            "example": "message.received"
+          },
+          "event_id": {
+            "type": "string",
+            "example": "evt_m7yt1zhy_h7nzx0tv"
+          },
+          "message_id": {
+            "type": "string",
+            "description": "The original outbound Notilify message ID."
+          },
+          "reply_id": {
+            "type": "string",
+            "description": "The persisted inbound reply ID."
+          },
+          "from": {
+            "type": "string",
+            "description": "The customer phone number."
+          },
+          "to": {
+            "type": "string",
+            "description": "The sender used for the original outbound message."
+          },
+          "text": {
+            "type": "string",
+            "description": "The inbound SMS content."
+          },
+          "provider": {
+            "type": "string",
+            "example": "brevo"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "environment": {
+            "type": "string",
+            "enum": [
+              "dev",
+              "production"
+            ]
+          }
+        },
+        "required": [
+          "event",
+          "event_id",
+          "message_id",
+          "reply_id",
+          "from",
+          "to",
+          "text",
+          "provider",
+          "timestamp",
+          "environment"
         ]
       },
       "DeliveryWebhookEventsResponse": {
