@@ -2150,6 +2150,7 @@
           },
           "from": {
             "type": "string",
+            "description": "Sender ID or purchased phone number used to send the message.",
             "example": "NOTILIFY"
           },
           "to": {
@@ -2256,6 +2257,7 @@
       },
       "WebhookConfigRequest": {
         "type": "object",
+        "description": "Configure one HTTPS endpoint per environment for outbound delivery status events and inbound SMS reply events. Notilify sends both event types to the same endpoint. Each request includes the x-notilify-signature header. The signature is the lowercase hexadecimal HMAC SHA256 digest of the exact UTF8 JSON request body, using the configured secret as the HMAC key. Return any 2xx response to acknowledge delivery. Notilify makes up to five total attempts. After a failed initial attempt, retries become eligible after 1 second, 5 seconds, 30 seconds, and 120 seconds. The retry worker runs once per minute, so an eligible retry can be delivered later than its eligibility time.",
         "properties": {
           "enabled": {
             "type": "boolean",
@@ -2264,11 +2266,22 @@
           "url": {
             "type": "string",
             "format": "uri",
+            "description": "The HTTPS endpoint that receives every selected event for this environment.",
             "example": "https://hooks.example.com/notilify"
           },
           "secret": {
             "type": "string",
+            "description": "The secret key used to sign the exact UTF8 JSON request body with HMAC SHA256.",
             "example": "whsec_abc123"
+          },
+          "environment": {
+            "type": "string",
+            "description": "The API key environment whose events are delivered to this endpoint.",
+            "enum": [
+              "dev",
+              "production"
+            ],
+            "default": "production"
           },
           "events": {
             "type": "array",
@@ -3062,6 +3075,7 @@
       },
       "DeliveryWebhookEventPayload": {
         "type": "object",
+        "description": "An outbound message status event. It uses the same endpoint, x-notilify-signature header, HMAC SHA256 signing method, acknowledgement rules, and retry policy as message.received events.",
         "properties": {
           "event": {
             "type": "string",
@@ -3069,6 +3083,7 @@
           },
           "event_id": {
             "type": "string",
+            "description": "The stable event identifier to use for duplicate protection across delivery attempts and manual replay.",
             "example": "evt_m7yt1zhy_h7nzx0tv"
           },
           "message_id": {
@@ -3203,6 +3218,7 @@
           },
           "signature": {
             "type": "string",
+            "description": "The lowercase hexadecimal HMAC SHA256 signature sent in x-notilify-signature. The signed content is the exact UTF8 JSON request body.",
             "example": "a9e02f..."
           },
           "payload": {
@@ -3235,7 +3251,7 @@
       },
       "InboundMessageWebhookEventPayload": {
         "type": "object",
-        "description": "An inbound SMS reply correlated with the original outbound message.",
+        "description": "An inbound SMS reply correlated with the original outbound message. Notilify sends it to the same configured endpoint as outbound delivery status events. The x-notilify-signature header contains the lowercase hexadecimal HMAC SHA256 digest of the exact UTF8 JSON request body, using the configured secret as the HMAC key. Return any 2xx response to acknowledge delivery. Notilify makes up to five total attempts. After a failed initial attempt, retries become eligible after 1 second, 5 seconds, 30 seconds, and 120 seconds. The retry worker runs once per minute, so an eligible retry can be delivered later than its eligibility time.",
         "properties": {
           "event": {
             "type": "string",
@@ -3246,6 +3262,7 @@
           },
           "event_id": {
             "type": "string",
+            "description": "The stable event identifier to use for duplicate protection across delivery attempts and manual replay.",
             "example": "evt_m7yt1zhy_h7nzx0tv"
           },
           "message_id": {
@@ -3254,7 +3271,7 @@
           },
           "reply_id": {
             "type": "string",
-            "description": "The persisted inbound reply ID."
+            "description": "The stable identifier for the logical inbound reply."
           },
           "from": {
             "type": "string",
@@ -3283,6 +3300,18 @@
               "production"
             ]
           }
+        },
+        "example": {
+          "event": "message.received",
+          "event_id": "evt_m7yt1zhy_h7nzx0tv",
+          "message_id": "67bc9f012ad89f0012de4a9f",
+          "reply_id": "68cf9f012ad89f0012de4b10",
+          "from": "+14155550123",
+          "to": "+18557517744",
+          "text": "Yes, that works for me",
+          "provider": "brevo",
+          "timestamp": "2026-09-24T19:45:12.345Z",
+          "environment": "production"
         },
         "required": [
           "event",
