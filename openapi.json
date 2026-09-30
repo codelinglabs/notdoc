@@ -746,6 +746,120 @@
         }
       }
     },
+    "/v1/otp": {
+      "post": {
+        "tags": [
+          "otp"
+        ],
+        "summary": "Generate and send an OTP",
+        "description": "Generate a one time code. SMS requests deliver the code to the supplied E.164 phone number. Email requests return the generated code for delivery by the client application.",
+        "operationId": "postV1Otp",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpGenerateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OTP generated and sent or returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpGenerateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or insufficient credit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/otp/verify": {
+      "post": {
+        "tags": [
+          "otp"
+        ],
+        "summary": "Verify an OTP",
+        "description": "Verify an unexpired OTP and consume it after successful approval.",
+        "operationId": "postV1OtpVerify",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpVerifyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP approved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpVerifyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid, expired, or previously verified OTP",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/payment": {
       "get": {
         "tags": [
@@ -1796,6 +1910,148 @@
         "required": [
           "status",
           "message"
+        ]
+      },
+      "OtpGenerateRequest": {
+        "type": "object",
+        "description": "Generate an OTP and deliver it by SMS or return it for email delivery.",
+        "properties": {
+          "channel": {
+            "type": "string",
+            "enum": [
+              "sms",
+              "email"
+            ],
+            "example": "sms"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Required when channel is sms. Use E.164 format.",
+            "example": "+96171123456"
+          },
+          "message": {
+            "type": "string",
+            "description": "Optional text placed before the generated code.",
+            "example": "Your verification code"
+          },
+          "sender": {
+            "type": "string",
+            "description": "Optional approved Sender ID or purchased phone number.",
+            "example": "MYAPP"
+          },
+          "expiryTime": {
+            "type": "string",
+            "description": "Code lifetime in minutes. The default is 20.",
+            "example": "10"
+          },
+          "length": {
+            "type": "string",
+            "description": "Generated code length. The default is 6.",
+            "example": "6"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "number",
+              "alphanumeric",
+              "letter"
+            ],
+            "example": "number"
+          }
+        },
+        "required": [
+          "channel"
+        ]
+      },
+      "OtpGenerateResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Otp Has Been Sent To User Phone Number"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "otpId": {
+                "type": "string",
+                "example": "67bc9f012ad89f0012de4a9f"
+              },
+              "channel": {
+                "type": "string",
+                "example": "sms"
+              },
+              "status": {
+                "type": "string",
+                "example": "pending"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "to": {
+                "type": "string",
+                "example": "+96171123456"
+              }
+            },
+            "required": [
+              "otpId",
+              "channel",
+              "status",
+              "createdAt"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "OtpVerifyRequest": {
+        "type": "object",
+        "properties": {
+          "otp": {
+            "type": "string",
+            "example": "482913"
+          }
+        },
+        "required": [
+          "otp"
+        ]
+      },
+      "OtpVerifyResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Otp Approved"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "otpId": {
+                "type": "string",
+                "example": "67bc9f012ad89f0012de4a9f"
+              }
+            },
+            "required": [
+              "otpId"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
         ]
       },
       "MessageSendRequest": {
